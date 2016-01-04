@@ -692,8 +692,11 @@ rad_continue_send_request(struct rad_handle *h, int selected, int *fd,
 		}
 		do {
 		    	h->srv++;
-			if (h->srv >= h->num_servers)
-				h->srv = 0;
+			/*return failure after loop through all the servers, or there will be infinitive loop*/
+			if (h->srv >= h->num_servers) {
+				generr(h, "No valid RADIUS responses received");
+				return (-1);
+			}
 			if (h->servers[h->srv].is_dead == 0)
 			    	break;
 			if (h->servers[h->srv].dead_time &&
