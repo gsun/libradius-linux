@@ -209,6 +209,10 @@ is_valid_response(struct rad_handle *h, int srv,
 	if (len > h->in_len)
 		return 0;
 
+    /* check the id */
+    if (h->out[POS_IDENT] != h->in[POS_IDENT])
+        return 0;
+
 	/* Check the response authenticator */
 	MD5_Init(&ctx);
 	MD5_Update(&ctx, &h->in[POS_CODE], POS_AUTH - POS_CODE);
